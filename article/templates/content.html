@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style type="text/css">
+        .container-fluid {
+            padding: 20px;
+        }
+    </style>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog Post - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/manhuatoTop.1.0.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ STATIC_URL }}css/blog-post.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script src="{{ STATIC_URL }}js/masonry.pkgd.js"></script>
+    <script src="{{ STATIC_URL }}js/manhuatoTop.1.0.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Start Bootstrap</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">关于</a>
+                    </li>
+                    <li>
+                        <a href="#">服务</a>
+                    </li>
+                    <li>
+                        <a href="#">联系我</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <!-- Blog Post Content Column -->
+            <div class="col-md-8" id="mdiv">
+                <!-- Blog Post -->
+                <!-- Title -->
+                <h1 class="page-header">
+                    <a href="#">{{article.title}}</a>
+                </h1>
+                <!-- Author -->
+                <p class="lead">
+                    by <a href="#">{{article.author}}</a>
+                </p>
+                <hr>
+                <!-- Date/Time -->
+                <p><span class="glyphicon glyphicon-time"></span>{{article.publish_time.year}}年{{article.publish_time.month}}月{{article.publish_time.day}}日</p>
+
+                <!-- Post Content -->
+                {{ article.content|safe }}
+                <hr>
+                <div class="comment-bottom text-right">
+                    <small>阅读：{{ article.read_count_num }} 评论：{{ article.comment_count }}</small>
+                </div>
+                <!-- Blog Comments -->
+                <!-- Comments Form -->
+                <div class="well" id="newComment">
+                    
+                    <form role="form" onsubmit="return false;">
+                        <h4>昵称:</h4>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="id_author">
+                        </div>
+                        <h4>评论:</h4>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" id="id_content"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="{{article.id}}" onclick="a('{{article.id}}')">提交</button>
+                    </form>
+                </div>
+                <hr id="plid">
+                <!-- Posted Comments -->
+                <!-- Comment -->
+                <div id="masonry" class="container-fluid">
+                    {% load mptt_tags %}
+                    {% for nodenew in nodes %}
+                    {% recursetree nodenew %}
+                    
+                    <div class="media" style="border:1px solid">
+                 
+                        {% if node.is_leaf_node %}
+
+                        <div class="media" id="commenre{{commenre.id}}">
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    {{node.author}}
+                                </h4>
+                                {{node.content}}
+                            </div>
+                            <div class="comment-bottom text-right">
+                                <span>
+                                    {{node.publish_time.year}}年{{node.publish_time.month}}月{{node.publish_time.day}}日
+                                    {{node.publish_time.hour}}:{{node.publish_time.minute}}:{{node.publish_time.second}}<a href="#newComment" class="aReply" onclick="recommon('{{node.author}}', '{{node.id}}', 'commenre' + '{{node.id}}')">回复</a>
+                                </span>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="media">
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    {{node.author}}
+
+                                </h4>
+                                {{node.content}}
+                            </div>
+                            <div class="comment-bottom text-right" id="commen{{commen.id}}">
+                                <span>
+                                    {{node.publish_time.year}}年{{node.publish_time.month}}月{{node.publish_time.day}}日
+                                    {{node.publish_time.hour}}:{{node.publish_time.minute}}:{{node.publish_time.second}}<a href="#newComment" class="aReply" onclick="recommon('{{node.author}}', '{{node.id}}', 'commen' + '{{node.id}}')">回复</a>
+                                </span>
+                            </div>
+                        </div>
+                        <ul>
+                            {{ children }}
+                        </ul>
+                        {% endif %}
+
+                    </div>
+
+                    {% endrecursetree %}
+                    {% endfor %}
+                </div>
+
+                    
+                </div>
+
+            <!-- Blog Sidebar Widgets Column -->
+            <div class="col-md-4">
+
+                <!-- Blog Search Well -->
+                <div class="well">
+                    <h4>搜索</h4>
+                    <div class="input-group">
+                        <input type="text" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <!-- /.input-group -->
+                </div>
+
+                <!-- Blog Categories Well -->
+                <div class="well">
+                    <h4>分类目录</h4>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="list-unstyled">
+                                {% if classification %}
+                                {% for x,y in classification %}
+                                <li><a href="">{{x}}({{y}})</a></li>
+                                <!--上一行已修改-->
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+                <!-- Side Widget Well -->
+                <div class="well">
+                    <h4>文章归档</h4>
+                    <ul>
+                        {% if date_list %}
+                        {% for x,y in date_list %}
+                        <li><a href="">{{x.year}}年{{x.month}}月({{y}})</a></li>
+                        <!--上一行已修改-->
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+
+
+            </div>
+
+        </div>
+        <!-- /.row -->
+        {% if article.get_before_article %}
+        {% with before=article.get_before_article %}
+        <p class="p1">上一篇 <a href="{{ before.get_absolute_url }}">{{before}} </a></p>
+        {% endwith %}
+        {% endif %}
+
+        {% if article.get_after_article %}
+
+        {% with after=article.get_after_article %}
+        <p class="p2">下一篇 <a href="{{ after.get_absolute_url }}">{{after}} </a></p>
+        {% endwith %}
+        {% endif %}
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Your Website 2014</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    
+    <script>
+
+        var flag = true; 
+        var articleid = '{{article.id}}'
+        var num = 0;
+      
+    
+        $(window).scroll(function () {
+            if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+                        if (flag) {
+                            num++;
+                            getList(articleid,num)
+                        }
+            }       
+        });
+
+        $(function () {
+            $(window).manhuatoTop({
+                showHeight: 100, //设置滚动高度时显示
+                speed: 400 //返回顶部的速度以毫秒为单位
+            });
+        });
+
+
+
+        var to = "";
+        var commontid = "";
+        var appendid = "";
+        function recommon(_to, _commontid,_id)
+        {
+            to = _to;
+            commontid = _commontid;
+            appendid = _id;
+            
+        }
+        function a(id) {
+            title = $('#id_author').val();
+            content = $('#id_content').val();
+            if (content == "")
+            {
+                alert("内容不能为空");
+            }
+            else{
+                  
+                $.ajax({
+                    type: "POST",
+                    url: "../../../../../../save/",
+                    data: { 'id': id, 'content': content, 'author': title, 'to': to, 'commontid': commontid },
+                    dataType: "json",
+                    success: function (data) {
+                        num = 0;
+                        var $container = $('#masonry');
+                        $container.empty()
+                        var $boxes = $(data.html);
+                        $container.append($boxes)
+
+                        $('#id_author').val('');
+                        $('#id_content').val('');
+                    }
+                });
+            }
+
+        }
+
+        function getList(id,num) {
+            $.ajax({
+                type: "POST",
+                url: "../../../../../../detailNew/",
+                data: { 'id': id,'num':num },
+                dataType: "json",
+                success: function (data) {
+
+
+                    var $container = $('#masonry');
+                   
+                    var $boxes = $(data.html);
+                    $container.append($boxes)
+                }
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>

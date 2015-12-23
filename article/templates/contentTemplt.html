@@ -1,0 +1,47 @@
+﻿{% load mptt_tags %}
+                    {% for nodenew in nodes %}
+                    {% recursetree nodenew %}
+
+<div class="media" style="border:1px solid">
+
+    {% if node.is_leaf_node %}
+
+    <div class="media" id="commenre{{commenre.id}}">
+        <div class="media-body">
+            <h4 class="media-heading">
+                {{node.author}}
+            </h4>
+            {{node.content}}
+        </div>
+        <div class="comment-bottom text-right">
+            <span>
+                {{node.publish_time.year}}年{{node.publish_time.month}}月{{node.publish_time.day}}日
+                {{node.publish_time.hour}}:{{node.publish_time.minute}}:{{node.publish_time.second}}<a href="#newComment" class="aReply" onclick="recommon('{{node.author}}', '{{node.id}}', 'commenre' + '{{node.id}}')">回复</a>
+            </span>
+        </div>
+    </div>
+    {% else %}
+    <div class="media">
+        <div class="media-body">
+            <h4 class="media-heading">
+                {{node.author}}
+
+            </h4>
+            {{node.content}}
+        </div>
+        <div class="comment-bottom text-right" id="commen{{commen.id}}">
+            <span>
+                {{node.publish_time.year}}年{{node.publish_time.month}}月{{node.publish_time.day}}日
+                {{node.publish_time.hour}}:{{node.publish_time.minute}}:{{node.publish_time.second}}<a href="#newComment" class="aReply" onclick="recommon('{{node.author}}', '{{node.id}}', 'commen' + '{{node.id}}')">回复</a>
+            </span>
+        </div>
+    </div>
+    <ul>
+        {{ children }}
+    </ul>
+    {% endif %}
+
+</div>
+
+                    {% endrecursetree %}
+                    {% endfor %}
